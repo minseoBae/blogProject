@@ -5,6 +5,7 @@ import com.example.blogproject.jwt.exception.CustomAuthenticationEntryPoint;
 import com.example.blogproject.jwt.filter.JwtAuthenticationFilter;
 import com.example.blogproject.jwt.util.JwtTokenizer;
 import com.example.blogproject.service.LogoutService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +40,14 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenizer), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .logout(logout -> { logout
+                .logout(logout -> logout
                         .logoutUrl("/logout")
                         .addLogoutHandler(logoutService)
-                        .logoutSuccessHandler((((request, response, authentication) -> UserContextHolder.clear())));
-                })
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            UserContextHolder.clear();
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)

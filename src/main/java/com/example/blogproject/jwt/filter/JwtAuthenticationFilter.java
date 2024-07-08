@@ -37,13 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getToken(request);
         if (StringUtils.hasText(token)) {
             try {
-                Claims claims = jwtTokenizer.parseAccessToken(token);
-                Long userId = claims.get("userId", Long.class);
-
-                if (jwtTokenizer.isRefreshTokenExpiredOrRevoked(userId)) {
-                    throw new BadCredentialsException("Refresh token is expired or revoked.");
-                }
-
                 getAuthentication(token);
             } catch (ExpiredJwtException e) {
                 request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());

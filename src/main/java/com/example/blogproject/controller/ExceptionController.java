@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ExceptionController {
     @GetMapping("/errorPage")
     public String showErrorPage() {
-        return "errorPage"; // Assuming you are using Thymeleaf, JSP, etc.
+        return "errorPage";
     }
 }

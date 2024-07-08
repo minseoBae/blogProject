@@ -12,7 +12,8 @@
         myPage
     </a>
 </div>
-<a th:href="@{/user/loginForm}">Login</a>
-<a th:href="@{/user/signupForm}">SignUp</a>
+<a th:if="!${username}" th:href="@{/user/loginForm}">Login</a>
+<a th:if="!${username}" th:href="@{/user/signupForm}">SignUp</a>
+<a th:if="${username}" th:href="@{/logout}">Logout</a>
 </body>
 </html>

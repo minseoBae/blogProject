@@ -84,9 +84,4 @@ public class JwtTokenizer {
     public Claims parseRefreshToken(String refreshToken) {
         return parseToken(refreshToken, refreshSecret);
     }
-
-    public boolean isRefreshTokenExpiredOrRevoked(Long userId) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
-        return refreshToken == null || refreshToken.isExpired() || refreshToken.isRevoked();
-    }
 }

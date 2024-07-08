@@ -1,53 +1,49 @@
 package com.example.blogproject.service;
 
-import com.example.blogproject.entity.RefreshToken;
-import com.example.blogproject.jwt.util.JwtTokenizer;
 import com.example.blogproject.repository.RefreshTokenRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class LogoutService implements LogoutHandler {
-    private final JwtTokenizer jwtTokenizer;
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    @Value("${jwt.secretKey}")
-    private String secretKey;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String token = null;
+        // Invalidate refreshToken in DB
+        String refreshToken = getCookieValue(request, "refreshToken");
+        if (refreshToken != null) {
+            refreshTokenService.deleteRefreshToken(refreshToken);
+        }
+
+        // Invalidate cookies
+        invalidateCookie(response, "accessToken");
+        invalidateCookie(response, "refreshToken");
+    }
+
+    private String getCookieValue(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
+                if (name.equals(cookie.getName())) {
+                    return cookie.getValue();
                 }
             }
         }
+        return null;
+    }
 
-        Long userId = jwtTokenizer.getUserIdFromToken(token);
-
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
-
-        //로그아웃이기 때문에 만료시키고 폐지시킨다.
-        if (refreshToken != null) {
-            refreshToken.setExpired(true);
-            refreshToken.setRevoked(true);
-            refreshTokenRepository.save(refreshToken);
-            log.info("Refresh token invalidated for user ID: {}", userId);
-        } else {
-            log.warn("No refresh token found for user ID: {}", userId);
-        }
+    private void invalidateCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }
