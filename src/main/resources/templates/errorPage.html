@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .error-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 1000px;
+      text-align: center;
+    }
+    .error-container h2 {
+      color: red;
+      margin-bottom: 20px;
+    }
+    .error-container p {
+      margin-bottom: 20px;
+    }
+    .error-container a {
+      text-decoration: none;
+      color: #4CAF50;
+    }
+    .error-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <h2>Error</h2>
+  <p id="errorMessage">An unexpected error occurred. Please try again later.</p>
+  <a href="/user/loginForm">Go to Login</a>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var errorMessage = "<%= request.getSession().getAttribute('errorMessage') %>";
+    if (errorMessage) {
+      document.getElementById('errorMessage').textContent = errorMessage;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "username": "minseo",
+  "password": "0402"
+}
+
+###
+POST http://localhost:8080/api/refreshToken
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW5zZW9AZ29vZ2xlLmNvbSIsInVzZXJuYW1lIjoibWluc2VvIiwibmFtZSI6Iu2FjOyKpO2EsOuvvOyEnCIsInVzZXJJZCI6MTUsInJvbGVzIjpbXSwiaWF0IjoxNzIwMDc0MjE2LCJleHAiOjE3MjA2NzkwMTZ9.ZJHFYJwTSuBdsrQY_I1NBFZE1J4DJKXhish-NpYZiDA
+
