@@ -1,4 +1,4 @@
-package com.example.blogproject.controller;
+package com.example.blogproject.controller.blog;
 
 import com.example.blogproject.entity.User;
 import com.example.blogproject.jwt.util.JwtTokenizer;

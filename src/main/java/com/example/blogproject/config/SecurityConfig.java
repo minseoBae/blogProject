@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .logoutSuccessHandler((request, response, authentication) -> {
                             UserContextHolder.clear();
                             response.setStatus(HttpServletResponse.SC_OK);
+                            response.sendRedirect("/blog/home");
                         })
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
@@ -55,7 +56,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint));
-
 
         return http.build();
     }

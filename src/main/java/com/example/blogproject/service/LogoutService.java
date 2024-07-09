@@ -1,6 +1,5 @@
 package com.example.blogproject.service;
 
-import com.example.blogproject.repository.RefreshTokenRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +15,6 @@ public class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        // Invalidate refreshToken in DB
         String refreshToken = getCookieValue(request, "refreshToken");
         if (refreshToken != null) {
             refreshTokenService.deleteRefreshToken(refreshToken);

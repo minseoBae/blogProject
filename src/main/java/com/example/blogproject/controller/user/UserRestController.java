@@ -1,4 +1,4 @@
-package com.example.blogproject.controller;
+package com.example.blogproject.controller.user;
 
 import com.example.blogproject.dto.UserLoginResponse;
 import com.example.blogproject.entity.RefreshToken;

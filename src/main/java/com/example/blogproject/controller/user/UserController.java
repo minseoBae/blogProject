@@ -1,4 +1,4 @@
-package com.example.blogproject.controller;
+package com.example.blogproject.controller.user;
 
 import com.example.blogproject.entity.User;
 import com.example.blogproject.filter.UserContextHolder;

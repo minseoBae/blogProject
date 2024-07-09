@@ -1,4 +1,4 @@
-package com.example.blogproject.controller;
+package com.example.blogproject.controller.exception;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
