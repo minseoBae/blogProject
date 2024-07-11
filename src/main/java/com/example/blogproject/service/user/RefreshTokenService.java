@@ -1,10 +1,8 @@
-package com.example.blogproject.service;
+package com.example.blogproject.service.user;
 
-import com.example.blogproject.entity.RefreshToken;
+import com.example.blogproject.entity.user.RefreshToken;
 import com.example.blogproject.jwt.util.JwtTokenizer;
-import com.example.blogproject.repository.RefreshTokenRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.blogproject.repository.user.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

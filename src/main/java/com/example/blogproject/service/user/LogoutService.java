@@ -1,4 +1,4 @@
-package com.example.blogproject.service;
+package com.example.blogproject.service.user;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

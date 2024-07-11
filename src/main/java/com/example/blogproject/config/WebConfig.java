@@ -2,7 +2,7 @@ package com.example.blogproject.config;
 
 import com.example.blogproject.filter.AuthenticationFilter;
 import com.example.blogproject.jwt.util.JwtTokenizer;
-import com.example.blogproject.repository.RoleRepository;
+import com.example.blogproject.repository.user.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
