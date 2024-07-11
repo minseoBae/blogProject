@@ -1,7 +1,6 @@
 package com.example.blogproject.jwt.util;
 
-import com.example.blogproject.entity.RefreshToken;
-import com.example.blogproject.repository.RefreshTokenRepository;
+import com.example.blogproject.repository.user.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

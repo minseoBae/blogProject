@@ -1,9 +1,12 @@
-package com.example.blogproject.entity;
+package com.example.blogproject.entity.user;
 
+import com.example.blogproject.entity.blog.Blog;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,4 +34,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Blog> blogs = new ArrayList<Blog>();
 }

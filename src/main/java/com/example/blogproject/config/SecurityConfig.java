@@ -4,7 +4,7 @@ import com.example.blogproject.filter.UserContextHolder;
 import com.example.blogproject.jwt.exception.CustomAuthenticationEntryPoint;
 import com.example.blogproject.jwt.filter.JwtAuthenticationFilter;
 import com.example.blogproject.jwt.util.JwtTokenizer;
-import com.example.blogproject.service.LogoutService;
+import com.example.blogproject.service.user.LogoutService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/blog/**", "/api/**", "/user/**", "/logout","/user/loginForm", "/user/signupForm", "/user/signup", "/api/login", "/api/refreshToken",
-                                "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/blog/**", "user/header", "header/**","/api/**", "/user/**", "/logout","/user/loginForm", "/user/signupForm", "/user/signup", "/api/login", "/api/refreshToken",
+                                "/css/**", "/js/**", "/script/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenizer), UsernamePasswordAuthenticationFilter.class)

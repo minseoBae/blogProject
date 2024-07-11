@@ -1,8 +1,8 @@
 package com.example.blogproject;
 
-import com.example.blogproject.entity.User;
-import com.example.blogproject.repository.UserRepository;
-import com.example.blogproject.service.UserService;
+import com.example.blogproject.entity.user.User;
+import com.example.blogproject.repository.user.UserRepository;
+import com.example.blogproject.service.user.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

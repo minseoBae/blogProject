@@ -1,6 +1,6 @@
 package com.example.blogproject.filter;
 
-import com.example.blogproject.entity.User;
+import com.example.blogproject.entity.user.User;
 
 public class UserContextHolder {
 

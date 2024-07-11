@@ -1,8 +1,8 @@
 package com.example.blogproject.controller.user;
 
-import com.example.blogproject.entity.User;
+import com.example.blogproject.entity.user.User;
 import com.example.blogproject.filter.UserContextHolder;
-import com.example.blogproject.service.UserService;
+import com.example.blogproject.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

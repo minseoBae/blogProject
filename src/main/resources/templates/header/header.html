@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/blog/home">Blog Logo</a></li>
+            <li><a th:if="!${username}" th:href="@{/user/loginForm}">Login</a></li>
+            <li ><a th:if="!${username}" th:href="@{/user/signupForm}">SignUp</a></li>
+            <li><a th:if="${username}" th:href="@{/logout}">Logout</a></li>
+            <li id="user-page-link"><a th:if="${username}" th:href="@{/mypage/username}">My Page</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>

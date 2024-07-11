@@ -1,9 +1,9 @@
 package com.example.blogproject.filter;
 
-import com.example.blogproject.entity.Role;
-import com.example.blogproject.entity.User;
+import com.example.blogproject.entity.user.Role;
+import com.example.blogproject.entity.user.User;
 import com.example.blogproject.jwt.util.JwtTokenizer;
-import com.example.blogproject.repository.RoleRepository;
+import com.example.blogproject.repository.user.RoleRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;

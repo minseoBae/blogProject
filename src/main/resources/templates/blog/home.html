@@ -5,8 +5,8 @@
     <title>Home</title>
 </head>
 <body>
+<div th:replace="~{header/header :: header}"></div>
 <p>home</p>
-
 <div>
     <a th:if="${username}" th:href="@{/myPage/{username}(username=${username})}">
         myPage

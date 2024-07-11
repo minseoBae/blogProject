@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+    <link rel="stylesheet" href="/css/like.css">
+</head>
+<body>
+<div th:replace="~{header/header :: header(username=${username})}"></div>
+<div class="post" data-post-id="1">
+    <h1>Post Title</h1>
+    <p>Post content...</p>
+    <button class="like-button" id="like-button-1">
+        <span class="like-icon">❤</span> Like
+    </button>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.like-button').click(function() {
+            const postId = $(this).closest('.post').data('post-id');
+            const likeButton = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '/posts/' + postId + '/like',
+                success: function(response) {
+                    if (response.liked) {
+                        likeButton.find('.like-icon').addClass('liked');
+                    } else {
+                        likeButton.find('.like-icon').removeClass('liked');
+                    }
+                    alert(response.notice);
+                },
+                error: function() {
+                    alert('포스트에 좋아요를 표시하는 동안 오류가 발생했습니다.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
