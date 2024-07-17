@@ -29,6 +29,7 @@ public class Post {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "likes", nullable = false)
+    @ColumnDefault("0")
     private Integer likes;
     @Column(name = "views", nullable = false)
     @ColumnDefault("0")

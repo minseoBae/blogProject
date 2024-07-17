@@ -14,13 +14,12 @@ import java.nio.file.Paths;
 
 @RestController
 public class ImageController {
-
     private final String uploadDir = "C://Temp/upload/";
+
     // 이미지불러오기
     @GetMapping("/C://Temp/upload/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable("filename") String filename) {
         try {
-            System.out.println("이미지불러왓음");
             // 파일 경로를 생성하고, 리소스를 로드
             Path file = Paths.get(uploadDir).resolve(filename);
             Resource resource = new UrlResource(file.toUri());

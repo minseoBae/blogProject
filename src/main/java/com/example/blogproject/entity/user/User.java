@@ -24,6 +24,8 @@ public class User {
     private String name;
     @Column(name = "email", nullable = false, length = 100)
     private String email;
+    @Column(name = "profile_image")
+    private String profileImage;
     @Column(name = "registration_date", nullable = false, updatable = false)
     private LocalDateTime registrationDate = LocalDateTime.now();
 

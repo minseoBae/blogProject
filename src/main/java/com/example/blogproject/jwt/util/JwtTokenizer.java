@@ -21,12 +21,10 @@ public class JwtTokenizer {
 
     public static Long ACCESS_TOKEN_EXPIRE_COUNT = 30 * 60 * 1000L; //30분
     public static Long REFRESH_TOKEN_EXPIRE_COUNT= 7*24*60*60*1000L; //7일
-    private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtTokenizer(@Value("${jwt.secretKey}") String accessSecret, @Value("${jwt.refreshKey}") String refreshSecret, RefreshTokenRepository refreshTokenRepository){
         this.accessSecret = accessSecret.getBytes(StandardCharsets.UTF_8);
         this.refreshSecret = refreshSecret.getBytes(StandardCharsets.UTF_8);
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     private String createToken(Long id, String email, String name, String username,

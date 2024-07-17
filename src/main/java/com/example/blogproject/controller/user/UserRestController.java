@@ -10,6 +10,7 @@ import com.example.blogproject.security.dto.UserLoginDto;
 import com.example.blogproject.service.user.RefreshTokenService;
 import com.example.blogproject.service.user.UserService;
 import io.jsonwebtoken.Claims;
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,19 +36,16 @@ public class UserRestController {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
-    @PostMapping("/check-duplicates")
-    public ResponseEntity<?> checkDuplicates(@RequestBody Map<String, String> payload) {
-        String username = payload.get("username");
-        String email = payload.get("email");
+    @PostMapping("/check-username")
+    public ResponseEntity<?> checkUsername(@RequestParam("username") String username) {
+        boolean exists = userService.existsByName(username);
+        return ResponseEntity.ok(Map.of("exists", exists));
+    }
 
-        boolean usernameExists = userRepository.findByUsername(username) != null;
-        boolean emailExists = userRepository.findByEmail(email) != null;
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("usernameExists", usernameExists);
-        response.put("emailExists", emailExists);
-
-        return ResponseEntity.ok(response);
+    @PostMapping("/check-email")
+    public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
+        boolean exists = userService.existsByEmail(email);
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 
     @PostMapping("/login")

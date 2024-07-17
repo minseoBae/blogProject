@@ -77,25 +77,25 @@ public class BlogController {
         }
     }
 
-    @GetMapping("/{id}")
-    public String showBlog(@PathVariable("id") Long blogId,
-                              Model model,
-                              HttpServletRequest request) {
-        User currentUser = userService.getCurrentUser(request);
-        Long userId = currentUser.getId();
-        model.addAttribute("username", currentUser.getUsername());
-        if (blogService.getBlogById(blogId) != null) {
-            Blog blog = blogService.getBlogById(blogId);
-            blogService.sortedPosts(blog.getId());
-            model.addAttribute("posts", postService.(true));
-            model.addAttribute("blog", blog);
-            return "/blog/myBlog";
-        } else {
-            model.addAttribute("error", "찾으시는 블로그가 없습니다.");
-            return "/errorPage";
-        }
-    }
-
+//    @GetMapping("/{id}")
+//    public String showBlog(@PathVariable("id") Long blogId,
+//                              Model model,
+//                              HttpServletRequest request) {
+//        User currentUser = userService.getCurrentUser(request);
+//        Long userId = currentUser.getId();
+//        model.addAttribute("username", currentUser.getUsername());
+//        if (blogService.getBlogById(blogId) != null) {
+//            Blog blog = blogService.getBlogById(blogId);
+//            blogService.sortedPosts(blog.getId());
+//            model.addAttribute("posts", postService.(true));
+//            model.addAttribute("blog", blog);
+//            return "/blog/myBlog";
+//        } else {
+//            model.addAttribute("error", "찾으시는 블로그가 없습니다.");
+//            return "/errorPage";
+//        }
+//    }
+//
 //    @GetMapping("/draft/{id}")
 //    public String showDraftPosts(@PathVariable("id") Long blogId, Model model, HttpServletRequest request) {
 //        User currentUser = userService.getCurrentUser(request);
