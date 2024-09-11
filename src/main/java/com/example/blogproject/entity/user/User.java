@@ -38,5 +38,5 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Blog> blogs = new ArrayList<Blog>();
+    private Set<Blog> blogs;
 }

@@ -27,7 +27,7 @@ public class JwtTokenizer {
         this.refreshSecret = refreshSecret.getBytes(StandardCharsets.UTF_8);
     }
 
-    private String createToken(Long id, String email, String name, String username,
+    private String createToken(Long id, String email, String name, String username, String profileImage,
                                List<String> roles, Long expire, byte[] secretKey){
 
         Claims claims = Jwts.claims().setSubject(email);
@@ -36,6 +36,7 @@ public class JwtTokenizer {
         claims.put("username",username);
         claims.put("name",name);
         claims.put("userId",id);
+        claims.put("profileImage", profileImage);
         claims.put("roles", roles);
 
         return Jwts.builder()
@@ -48,12 +49,12 @@ public class JwtTokenizer {
     }
 
     //ACCESS Token 생성
-    public String createAccessToken(Long id, String email, String name, String username, List<String> roles){
-        return createToken(id,email,name,username,roles,ACCESS_TOKEN_EXPIRE_COUNT,accessSecret);
+    public String createAccessToken(Long id, String email, String name, String username, String profileImage, List<String> roles){
+        return createToken(id,email,name,username,profileImage,roles,ACCESS_TOKEN_EXPIRE_COUNT,accessSecret);
     }
     //Refresh Token생성
-    public String createRefreshToken(Long id, String email, String name, String username, List<String> roles){
-        return createToken(id,email,name,username,roles,REFRESH_TOKEN_EXPIRE_COUNT,refreshSecret);
+    public String createRefreshToken(Long id, String email, String name, String username, String profileImage, List<String> roles){
+        return createToken(id,email,name,username,profileImage,roles,REFRESH_TOKEN_EXPIRE_COUNT,refreshSecret);
     }
 
     public static Key getSigningKey(byte[] secretKey){

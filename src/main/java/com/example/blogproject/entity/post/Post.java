@@ -3,19 +3,18 @@ package com.example.blogproject.entity.post;
 import com.example.blogproject.entity.blog.Blog;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +25,21 @@ public class Post {
     private String content;
     @Column(name = "status", nullable = false)
     private Boolean status;
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-    @Column(name = "likes", nullable = false)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(name = "image")
+    private String imageUrl;
+    @Column(name = "likes")
     @ColumnDefault("0")
     private Integer likes;
-    @Column(name = "views", nullable = false)
+    @Column(name = "views")
     @ColumnDefault("0")
     private Integer views;
-    @Column(name = "image", nullable = false)
-    private String image;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<Image> image;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

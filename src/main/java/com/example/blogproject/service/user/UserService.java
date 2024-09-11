@@ -6,7 +6,7 @@ import com.example.blogproject.entity.user.User;
 import com.example.blogproject.jwt.util.JwtTokenizer;
 import com.example.blogproject.repository.user.RoleRepository;
 import com.example.blogproject.repository.user.UserRepository;
-import com.example.blogproject.service.image.FileStorageService;
+import com.example.blogproject.service.image.FileService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -27,13 +25,12 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final JwtTokenizer jwtTokenizer;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final FileStorageService fileStorageService;
-
-    private final Path rootLocation = Paths.get("profile-images");
+    private final FileService fileService;
 
     @Transactional
     public void registerUser(UserSaveRequestDTO userSaveRequestDTO) throws IOException {
-        String uploadedFileUrl = "/upload/"+ fileStorageService.storeFile(userSaveRequestDTO.getProfileImage());
+        String uploadDir = "C://Temp/upload/profile-images";
+        String uploadedFileUrl = "/upload/profile-images/"+ fileService.storeFile(userSaveRequestDTO.getProfileImage(), uploadDir);
         User newUser = new User();
         newUser.setUsername(userSaveRequestDTO.getUsername());
         newUser.setPassword(bCryptPasswordEncoder.encode(userSaveRequestDTO.getPassword()));

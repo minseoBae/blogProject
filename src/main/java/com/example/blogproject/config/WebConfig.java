@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
     private final JwtTokenizer jwtTokenizer;
     private final RoleRepository roleRepository;
 
@@ -22,5 +24,11 @@ public class WebConfig {
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1); // 필터 실행 순서 설정 (낮을수록 먼저 실행)
         return registrationBean;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:///C:/Temp/upload/");
     }
 }

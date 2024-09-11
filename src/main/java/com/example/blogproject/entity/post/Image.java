@@ -14,11 +14,13 @@ public class Image {
     @Column(name = "image_id")
     private Long id;
 
+    @Column(name = "original_name", nullable = false)
+    private String originalName;
 
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 }

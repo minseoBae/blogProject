@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,11 +30,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Slf4j
 public class UserRestController {
     private final JwtTokenizer jwtTokenizer;
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/check-username")
@@ -62,9 +62,9 @@ public class UserRestController {
             List<String> roles = loginUser.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
             String accessToken = jwtTokenizer.createAccessToken(
-                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), roles);
+                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), roles);
             String refreshToken = jwtTokenizer.createRefreshToken(
-                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), roles);
+                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), roles);
 
             //refreshToken을 DB에 저장
             RefreshToken refreshTokenEntity = new RefreshToken();
@@ -120,7 +120,7 @@ public class UserRestController {
 
         List roles = (List)claims.get("roles");
 
-        String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), roles);
+        String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), user.getProfileImage(), roles);
 
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setHttpOnly(true);

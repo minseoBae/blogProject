@@ -3,8 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/profile.css">
+
 </head>
 <body>
-
+<div th:replace="~{header/header :: header(username=${user.username})}"></div>
+<div class="profile-container">
+    <table>
+        <thead>
+        <tr>
+            <th>프로필이미지</th>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>가입날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <img th:if="${user !=null and user.profileImage != null}" th:src="@{|${user.profileImage}|}" alt="Loading image" class="profile-picture">
+                <img th:if="${user !=null && user.profileImage == null}" src="/image/profile.jpg" alt="No image" class="profile-picture">
+            </td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${#temporals.format(user.registrationDate, 'yyyy/MM/dd')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/post/editForm/{id}(id=${user.id})}"><button class="edit-profile-btn">Edit Profile</button></a>
+</div>
 </body>
 </html>

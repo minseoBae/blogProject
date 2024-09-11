@@ -3,7 +3,7 @@ package com.example.blogproject.controller.user;
 import com.example.blogproject.dto.UserSaveRequestDTO;
 import com.example.blogproject.entity.user.User;
 import com.example.blogproject.filter.UserContextHolder;
-import com.example.blogproject.service.image.FileStorageService;
+import com.example.blogproject.service.blog.BlogService;
 import com.example.blogproject.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-
-    private final String uploadDir = "C://Temp/upload/";
-    private final FileStorageService fileStorageService;
+    private final BlogService blogService;
 
     @GetMapping("/signupForm")
     public String signup(Model model) {
@@ -40,6 +40,7 @@ public class UserController {
         }
         try {
             userService.registerUser(userSaveRequestDTO);
+            blogService.createBlog(userSaveRequestDTO);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "서버 문제로 인해 회원 가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
             return "/user/error";
@@ -53,11 +54,16 @@ public class UserController {
         return "/user/loginForm";
     }
 
-    @GetMapping("/myPage/{username}")
-    public String myPage(HttpServletRequest request, @PathVariable String username, Model model) {
-        User user = UserContextHolder.getUser();
-        model.addAttribute("user", user);
+    @GetMapping("/myPage/{id}")
+    public String myPage(HttpServletRequest request, @PathVariable("id") Long userId, Model model) {
+        User CurrentUser = UserContextHolder.getUser();
+        User loginUser = userService.getUser(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾지 못했습니다."));
+        if(!Objects.equals(CurrentUser.getId(), loginUser.getId())) {
+            return "redirect:/blog/home";
+        }
 
-        return "/user/myPage";
+        model.addAttribute("user", CurrentUser);
+
+        return "user/myPage";
     }
 }

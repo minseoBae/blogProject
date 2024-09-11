@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/post-details.css">
+</head>
+<body>
+<div th:replace="~{header/header :: header(username=${user.username})}"></div>
+<div class="container">
+    <h2 th:text="${post.title}">Post Title</h2>
+    <img th:src="@{|${post.imageUrl}|}" alt="Post Image">
+    <p th:utext="${post.content}">Post Content</p>
+</div>
+</body>
+</html>

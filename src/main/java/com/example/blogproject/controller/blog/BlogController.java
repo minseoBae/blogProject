@@ -3,10 +3,13 @@ package com.example.blogproject.controller.blog;
 import com.example.blogproject.entity.blog.Blog;
 import com.example.blogproject.entity.user.User;
 import com.example.blogproject.service.blog.BlogService;
+import com.example.blogproject.service.post.PostService;
 import com.example.blogproject.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,40 +21,14 @@ import org.springframework.web.bind.annotation.*;
 public class BlogController {
     private final UserService userService;
     private final BlogService blogService;
+    private final PostService postService;
 
     @GetMapping("/home")
     public String home(Model model, HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        String username = null;
 
-        if(currentUser != null) {
-            username = currentUser.getUsername();
-        }
-
-        model.addAttribute("username", username);
+        model.addAttribute("user", currentUser);
         return "blog/home";
-    }
-
-    @GetMapping("/createForm")
-    public String createBlogForm(HttpServletRequest request, Model model) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser != null) {
-            model.addAttribute("blog", new Blog());
-            model.addAttribute("user", currentUser);
-            return "/blog/createBlog";
-        }
-        return "redirect:/user/loginForm";
-    }
-
-    @PostMapping("/create")
-    public String createBlog(@RequestParam("title") String title,
-                             HttpServletRequest request) {
-        try {
-            Long blogId = blogService.createBlog(title, request);
-            return "redirect:/blog/" + blogId;
-        } catch (Exception e) {
-            return "redirect:/blog/createForm";
-        }
     }
 
     @GetMapping("/updateForm/{id}")
@@ -69,39 +46,23 @@ public class BlogController {
 
     @PostMapping("/update")
     public String updateBlog(@ModelAttribute Blog blog, HttpServletRequest request) {
+        User currentUser = userService.getCurrentUser(request);
         try {
             blogService.updateBlog(blog);
-            return "redirect:/blog/" + blog.getId();
+            return "redirect:/blog/" + currentUser.getId();
         } catch (Exception e) {
             return "redirect:/blog/updateForm";
         }
     }
 
-//    @GetMapping("/{id}")
-//    public String showBlog(@PathVariable("id") Long blogId,
-//                              Model model,
-//                              HttpServletRequest request) {
-//        User currentUser = userService.getCurrentUser(request);
-//        Long userId = currentUser.getId();
-//        model.addAttribute("username", currentUser.getUsername());
-//        if (blogService.getBlogById(blogId) != null) {
-//            Blog blog = blogService.getBlogById(blogId);
-//            blogService.sortedPosts(blog.getId());
-//            model.addAttribute("posts", postService.(true));
-//            model.addAttribute("blog", blog);
-//            return "/blog/myBlog";
-//        } else {
-//            model.addAttribute("error", "찾으시는 블로그가 없습니다.");
-//            return "/errorPage";
-//        }
-//    }
-//
-//    @GetMapping("/draft/{id}")
-//    public String showDraftPosts(@PathVariable("id") Long blogId, Model model, HttpServletRequest request) {
-//        User currentUser = userService.getCurrentUser(request);
-//        model.addAttribute("user", currentUser);
-//        model.addAttribute("blog", blogService.getBlogById(blogId));
-//        model.addAttribute("posts", postService.getDraftPostsByBlog(blogId));
-//        return "/blog/draft";
-//    }
+    @GetMapping("/{id}")
+    public String showBlog(@PathVariable("id") Long userId,
+                           @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
+                              Model model, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        User currentUser = userService.getCurrentUser(request);
+        model.addAttribute("user", currentUser);
+        model.addAttribute("blogs", blogService.findBlogByUserId(pageable, userId));
+        return "/blog/myBlog";
+    }
 }

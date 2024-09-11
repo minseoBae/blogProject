@@ -1,15 +1,15 @@
 package com.example.blogproject.service.blog;
 
+import com.example.blogproject.dto.UserSaveRequestDTO;
 import com.example.blogproject.entity.blog.Blog;
 import com.example.blogproject.entity.post.Post;
-import com.example.blogproject.entity.user.User;
-import com.example.blogproject.jwt.util.JwtTokenizer;
 import com.example.blogproject.repository.blog.BlogRepository;
-import com.example.blogproject.repository.post.PostRepository;
 import com.example.blogproject.repository.user.UserRepository;
-import com.example.blogproject.service.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,22 +20,13 @@ import java.util.List;
 public class BlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
-    private final JwtTokenizer jwtTokenizer;
-    private final UserService userService;
 
     @Transactional
-    public Long createBlog(String title, HttpServletRequest request) {
-        User user = userService.getCurrentUser(request);
-        if (user == null) {
-            throw new IllegalStateException("사용자를 찾을 수 없습니다.");
-        }
-
+    public void createBlog(UserSaveRequestDTO userSaveRequestDTO) {
         Blog blog = new Blog();
-        blog.setTitle(title);
-        blog.setUser(user);
+        blog.setTitle(userSaveRequestDTO.getUsername() + ".log");
+        blog.setUser(userRepository.findByUsername(userSaveRequestDTO.getUsername()));
         blogRepository.save(blog);
-        return blog.getId();
     }
 
     @Transactional
@@ -44,8 +35,11 @@ public class BlogService {
     }
 
     @Transactional
-    public List<Blog> findBlogByUserId(Long id) {
-        return blogRepository.findAllByUserId(id);
+    public Page<Blog> findBlogByUserId(Pageable pageable, Long userId) {
+        Pageable sortedByDescId = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "id"));
+
+        return blogRepository.findAllByUserId(sortedByDescId, userId);
     }
 
     public Blog getBlogById(Long blogId) {
@@ -53,6 +47,7 @@ public class BlogService {
     }
 
     public void sortedPosts(Long blogId) {
+
         Blog blog = blogRepository.findById(blogId).orElse(null);
         assert blog != null;
         List<Post> list = blog.getPosts().stream()
@@ -60,14 +55,4 @@ public class BlogService {
                 .toList();
         blog.setPosts(list);
     }
-
-//    public Blog getBlogByPostId(Long postId) {
-//        Post post = postRepository.findByPostId(postId);
-//        if (post != null) {
-//            return post.getBlog();
-//        }
-//        return null;
-//    }
-
-
 }
