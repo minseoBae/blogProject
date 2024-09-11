@@ -14,7 +14,7 @@
                 <li><a th:if="!${user}" th:href="@{/user/loginForm}">Login</a></li>
                 <li ><a th:if="!${user}" th:href="@{/user/signupForm}">SignUp</a></li>
                 <li><a th:if="${user}" th:href="@{/logout}">Logout</a></li>
-                <li><a th:if="${user}" th:href="@{/blog/{userId}(userId=${user.getId()})}">MyPage</a></li>
+                <li><a th:if="${user}" th:href="@{/user/myPage/{userId}(userId=${user.getId()})}">MyPage</a></li>
                 <li><img th:if="${user !=null and user.profileImage != null}" th:src="@{|${user.profileImage}|}" alt="이미지 로딩중" class="profile-pic"></li>
                 <li><a th:if="${user}" th:href="@{/user/myPage/{id}(id=${user.id})}"><img th:if="${user !=null && user.profileImage == null}" src="/image/profile.jpg" alt="이미지 없음" class="profile-pic"></a></li>
             </div>

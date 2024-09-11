@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/myPage/{id}")
-    public String myPage(HttpServletRequest request, @PathVariable("id") Long userId, Model model) {
+    public String myPage(@PathVariable("id") Long userId, Model model) {
         User CurrentUser = UserContextHolder.getUser();
         User loginUser = userService.getUser(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾지 못했습니다."));
         if(!Objects.equals(CurrentUser.getId(), loginUser.getId())) {
