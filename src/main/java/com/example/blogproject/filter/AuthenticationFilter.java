@@ -43,6 +43,7 @@ public class AuthenticationFilter implements Filter {
                 String username = claims.get("username", String.class);
                 String name = claims.get("name", String.class);
                 String email = claims.getSubject();
+                String introduction = claims.get("introduction", String.class);
                 String profileImage = claims.get("profileImage", String.class);
                 List<String> roleNames = claims.get("roles", List.class);
 
@@ -52,6 +53,7 @@ public class AuthenticationFilter implements Filter {
                 user.setName(name);
                 user.setEmail(email);
                 user.setProfileImage(profileImage);
+                user.setIntroduction(introduction);
                 Set<Role> roles = roleRepository.findByNameIn(roleNames);
                 user.setRoles(roles);
 

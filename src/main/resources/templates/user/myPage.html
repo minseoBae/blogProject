@@ -16,6 +16,7 @@
             <th>프로필이미지</th>
             <th>아이디</th>
             <th>이름</th>
+            <th>자기소개</th>
             <th>이메일</th>
             <th>가입날짜</th>
         </tr>
@@ -28,6 +29,7 @@
             </td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.name}"></td>
+            <td th:if="${user.introduction}" th:text="${user.introduction}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${#temporals.format(user.registrationDate, 'yyyy/MM/dd')}"></td>
         </tr>

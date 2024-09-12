@@ -62,9 +62,9 @@ public class UserRestController {
             List<String> roles = loginUser.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
             String accessToken = jwtTokenizer.createAccessToken(
-                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), roles);
+                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), loginUser.getIntroduction(), roles);
             String refreshToken = jwtTokenizer.createRefreshToken(
-                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), roles);
+                    loginUser.getId(), loginUser.getEmail(), loginUser.getName(), loginUser.getUsername(), loginUser.getProfileImage(), loginUser.getIntroduction(), roles);
 
             //refreshToken을 DB에 저장
             RefreshToken refreshTokenEntity = new RefreshToken();
@@ -120,7 +120,7 @@ public class UserRestController {
 
         List roles = (List)claims.get("roles");
 
-        String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), user.getProfileImage(), roles);
+        String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), user.getProfileImage(), user.getIntroduction(), roles);
 
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setHttpOnly(true);
