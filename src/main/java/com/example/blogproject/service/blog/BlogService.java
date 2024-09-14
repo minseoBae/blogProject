@@ -47,7 +47,6 @@ public class BlogService {
     }
 
     public void sortedPosts(Long blogId) {
-
         Blog blog = blogRepository.findById(blogId).orElse(null);
         assert blog != null;
         List<Post> list = blog.getPosts().stream()

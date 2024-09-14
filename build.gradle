@@ -38,6 +38,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    /* Apache commons-io */
+    implementation 'commons-io:commons-io:2.11.0'
+    /* Apache Commons FileUpload */
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     //gson -json 메시지를 다루기 위한 라이브러리
     implementation 'com.google.code.gson:gson'
     //JWT & Json
