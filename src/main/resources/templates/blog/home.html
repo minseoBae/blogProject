@@ -9,12 +9,9 @@
 <div th:replace="~{header/header :: header}"></div>
 <p>home</p>
 <div>
-    <a th:if="${user}" th:href="@{/blog/{userId}(userId=${user.getId()})}">
+    <a th:if="${user}" th:href="@{/blog/myBlog}">
         myPage
     </a>
 </div>
-<a th:if="!${user}" th:href="@{/user/loginForm}">Login</a>
-<a th:if="!${user}" th:href="@{/user/signupForm}">SignUp</a>
-<a th:if="${user}" th:href="@{/logout}">Logout</a>
 </body>
 </html>

@@ -37,6 +37,7 @@ public class UserService {
         newUser.setEmail(userSaveRequestDTO.getEmail());
         newUser.setName(userSaveRequestDTO.getName());
         newUser.setProfileImage(uploadedFileUrl);
+        newUser.setBlogName(userSaveRequestDTO.getUsername() + ".log");
 
         Role userRole = roleRepository.findByName("ROLE_USER");
         newUser.setRoles(Collections.singleton(userRole));
@@ -86,5 +87,15 @@ public class UserService {
             return userRepository.findById(userId).orElse(null);
         } else
             return null;
+    }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

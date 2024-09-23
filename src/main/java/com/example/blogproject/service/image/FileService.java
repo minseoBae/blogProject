@@ -72,8 +72,4 @@ public class FileService {
     public static String resourcePathToSavedPath(String resourcePath) {
         return "C:/temp" + resourcePath.replace("/image", "");
     }
-
-    public static String savedPathToResourcePath(String savedPath) {
-        return "/image" + savedPath.replace("C:/temp", "");
-    }
 }

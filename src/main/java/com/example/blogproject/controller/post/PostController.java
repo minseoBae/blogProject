@@ -1,11 +1,10 @@
 package com.example.blogproject.controller.post;
 
 import com.example.blogproject.dto.PostSaveRequestDTO;
-import com.example.blogproject.entity.blog.Blog;
 import com.example.blogproject.entity.post.Post;
 import com.example.blogproject.entity.user.User;
 import com.example.blogproject.filter.UserContextHolder;
-import com.example.blogproject.repository.blog.BlogRepository;
+import com.example.blogproject.repository.user.UserRepository;
 import com.example.blogproject.service.blog.BlogService;
 import com.example.blogproject.service.post.PostService;
 import com.example.blogproject.service.user.UserService;
@@ -24,7 +23,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final BlogService blogService;
-    private final BlogRepository blogRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("showDetail/{id}")
     public String showPost(@PathVariable("id") Long postId, Model model) {
@@ -36,24 +35,23 @@ public class PostController {
         return "/post/detailPost"; // Path to your Thymeleaf template
     }
 
-    @GetMapping("/addForm/{id}")
-    public String addForm(@PathVariable("id") Long blogId, Model model) {
+    @GetMapping("/addForm")
+    public String addForm(Model model) {
         User CurrentUser = UserContextHolder.getUser();
 
         model.addAttribute("user", CurrentUser);
-        model.addAttribute("blogId", blogId);
         model.addAttribute("post", new PostSaveRequestDTO());
         return "/post/addPost";
     }
 
     @PostMapping("/addPost")
     public String saveContent(@ModelAttribute PostSaveRequestDTO postSaveRequestDTO,
-                              @RequestParam Long blogId) {
+                              @RequestParam Long userId) {
         try {
-            Blog blog = blogRepository.findById(blogId).orElseThrow(() ->
-                    new IllegalArgumentException("Invalid blog ID"));
-            postService.savePost(postSaveRequestDTO, blog);
-            return "redirect:/post/" + blog.getId();
+            User user = userRepository.findById(userId).orElseThrow(() ->
+                    new IllegalArgumentException("Invalid user ID"));
+            postService.savePost(postSaveRequestDTO, user);
+            return "redirect:/post/" + user.getId();
         } catch (Exception e) {
             return "blog/home";
         }
@@ -72,39 +70,27 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String showPublicPosts(@PathVariable("id") Long blogId,
+    public String showPublicPosts(@PathVariable("id") Long userId,
                            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
                            Model model, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page - 1, size);
         User currentUser = userService.getCurrentUser(request);
         model.addAttribute("user", currentUser);
-        if (blogService.getBlogById(blogId) != null) {
-            Blog blog = blogService.getBlogById(blogId);
-            blogService.sortedPosts(blog.getId());
-            model.addAttribute("posts", postService.findAll(pageable, true, blogId));
-            model.addAttribute("blog", blog);
-            return "post/publishPost";
-        } else {
-            model.addAttribute("error", "찾으시는 블로그가 없습니다.");
-            return "errorPage";
-        }
+        userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow();
+        blogService.sortedPosts(user.getId());
+        model.addAttribute("posts", postService.findAll(pageable, true, userId));
+        return "post/publishPost";
     }
 
     @GetMapping("/draft/{id}")
-    public String showDraftPosts(@PathVariable("id") Long blogId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
+    public String showDraftPosts(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
                                  Model model, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page - 1, size);
         User currentUser = userService.getCurrentUser(request);
-        if (blogService.getBlogById(blogId) != null) {
-            Blog blog = blogService.getBlogById(blogId);
-            blogService.sortedPosts(blog.getId());
-            model.addAttribute("user", currentUser);
-            model.addAttribute("posts", postService.findAll(pageable, false, blogId));
-            model.addAttribute("blog", blog);
-            return "post/draftPost";
-        } else {
-            model.addAttribute("error", "찾으시는 블로그가 없습니다.");
-            return "errorPage";
-        }
+        blogService.sortedPosts(currentUser.getId());
+        model.addAttribute("user", currentUser);
+        model.addAttribute("posts", postService.findAll(pageable, false, id));
+        return "post/draftPost";
     }
 }

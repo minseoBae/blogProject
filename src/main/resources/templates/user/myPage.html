@@ -10,6 +10,23 @@
 <body>
 <div th:replace="~{header/header :: header(username=${user.username})}"></div>
 <div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-picture">
+                <img th:if="${user !=null and user.profileImage != null}" th:src="@{|${user.profileImage}|}" alt="Loading image" class="profile-picture">
+                <img th:if="${user !=null && user.profileImage == null}" src="/image/profile.jpg" alt="No image" class="profile-picture">
+        </div>
+        <div class="profile-introduce">
+            <h1 th:text="${user.name}"></h1>
+            <p th:if="${user.introduction}" th:text="${user.introduction}"></p>
+        </div>
+    </div>
+    <div class="profile-body">
+        <div class="profile-blogName"></div>
+        <div class="profile-social"></div>
+        <div class="profile-email"></div>
+        <div class="approve-email"></div>
+        <div class="cancel-account"></div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -23,10 +40,6 @@
         </thead>
         <tbody>
         <tr>
-            <td>
-                <img th:if="${user !=null and user.profileImage != null}" th:src="@{|${user.profileImage}|}" alt="Loading image" class="profile-picture">
-                <img th:if="${user !=null && user.profileImage == null}" src="/image/profile.jpg" alt="No image" class="profile-picture">
-            </td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.name}"></td>
             <td th:if="${user.introduction}" th:text="${user.introduction}"></td>

@@ -2,12 +2,12 @@ package com.example.blogproject.service.post;
 
 import com.example.blogproject.dto.DisplayedImageDTO;
 import com.example.blogproject.dto.PostSaveRequestDTO;
-import com.example.blogproject.entity.blog.Blog;
 import com.example.blogproject.entity.post.Image;
 import com.example.blogproject.entity.post.Post;
-import com.example.blogproject.repository.blog.BlogRepository;
+import com.example.blogproject.entity.user.User;
 import com.example.blogproject.repository.image.ImageRepository;
 import com.example.blogproject.repository.post.PostRepository;
+import com.example.blogproject.repository.user.UserRepository;
 import com.example.blogproject.service.image.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,29 +34,34 @@ import java.util.Objects;
 public class PostService {
     private final PostRepository postRepository;
     private final FileService fileService;
-    private final BlogRepository blogRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
 
-    public void savePost(PostSaveRequestDTO postSaveRequestDTO, Blog blog) throws IOException {
+    public void savePost(PostSaveRequestDTO postSaveRequestDTO, User user) throws IOException {
         String uploadDir = "C://Temp/upload/post/";
         List<DisplayedImageDTO> tempImages = extractImageElement(postSaveRequestDTO.getContent());
+
+        // 이미지 파일을 최종 디렉터리로 이동
         for (DisplayedImageDTO tempImage : tempImages) {
-            moveTempFileToSavedFolder(tempImage, "content");
+            moveTempFileToSavedFolder(tempImage);
         }
+
+        // 게시글 내용에서 이미지 소스 경로를 임시 경로에서 최종 경로로 변경
         String updatedContent = changeImageSource(postSaveRequestDTO.getContent());
 
         String uploadedFileUrl = "/upload/post/"+ fileService.storeFile(postSaveRequestDTO.getImage(), uploadDir);
         Post post = Post.builder()
                 .title(postSaveRequestDTO.getTitle())
-                .content(postSaveRequestDTO.getContent())
+                .content(updatedContent)
                 .status(postSaveRequestDTO.getStatus())
                 .imageUrl(uploadedFileUrl)
                 .createdAt(LocalDateTime.now())
-                .blog(blog)
+                .user(user)
                 .build();
 
         post = postRepository.save(post);
 
+        // 이미지 정보를 데이터베이스에 저장
         for (DisplayedImageDTO tempImage : tempImages) {
             Image image = new Image();
             image.setOriginalName(tempImage.getOriginalName());
@@ -66,11 +71,11 @@ public class PostService {
         }
     }
 
-    public Page<Post> findAll(Pageable pageable, boolean status, Long blogId) {
+    public Page<Post> findAll(Pageable pageable, boolean status, Long userId) {
         Pageable sortedByCreatedAt = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        return postRepository.findAllByBlogIdAndStatus(blogId, status, sortedByCreatedAt);
+        return postRepository.findAllByUserIdAndStatus(userId, status, sortedByCreatedAt);
     }
 
     @Transactional
@@ -94,8 +99,10 @@ public class PostService {
 
     public boolean checkUser(Long userId, Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
-        Blog postedBlog = blogRepository.findById(post.getBlog().getId()).orElse(null);
-        Long blogUserId = postedBlog.getUser().getId();
+        Long blogUserId = null;
+        if (post != null) {
+            blogUserId = post.getUser().getId();
+        }
         return Objects.equals(blogUserId, userId);
     }
 
@@ -114,9 +121,9 @@ public class PostService {
         return tempImgs;
     }
 
-    private void moveTempFileToSavedFolder(DisplayedImageDTO tempImg, String movedFolderName) throws IOException {
+    private void moveTempFileToSavedFolder(DisplayedImageDTO tempImg) throws IOException {
         String tempPath = FileService.resourcePathToSavedPath(tempImg.getSavedPath());
-        String targetPath = tempPath.replaceFirst("temporary", movedFolderName);
+        String targetPath = tempPath.replaceFirst("temporary", "content");
         fileService.moveFile(tempPath, targetPath);
     }
 

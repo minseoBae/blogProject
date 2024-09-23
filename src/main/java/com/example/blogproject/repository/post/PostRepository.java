@@ -14,4 +14,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Query("UPDATE Post p SET p.likes = :likeCnt WHERE p.id = :postId")
     void updateLikes(@Param("postId") Long postId, @Param("likeCnt") Long likeCnt);
-    Page<Post> findAllByBlogIdAndStatus(Long blogId, Boolean status, Pageable pageable);}
+    Page<Post> findAllByUserIdAndStatus(Long userId, boolean status, Pageable sortedByCreatedAt);
+}

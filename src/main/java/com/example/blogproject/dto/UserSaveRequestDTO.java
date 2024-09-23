@@ -14,4 +14,5 @@ public class UserSaveRequestDTO {
     private String email;
     private String name;
     private MultipartFile profileImage;
+    private String blogName;
 }

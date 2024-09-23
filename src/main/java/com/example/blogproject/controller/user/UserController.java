@@ -5,7 +5,6 @@ import com.example.blogproject.entity.user.User;
 import com.example.blogproject.filter.UserContextHolder;
 import com.example.blogproject.service.blog.BlogService;
 import com.example.blogproject.service.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +39,6 @@ public class UserController {
         }
         try {
             userService.registerUser(userSaveRequestDTO);
-            blogService.createBlog(userSaveRequestDTO);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "서버 문제로 인해 회원 가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
             return "/user/error";

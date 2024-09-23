@@ -11,9 +11,8 @@
 <body>
 <div th:replace="~{header/header :: header(username=${user.username})}"></div>
 <div class="post" data-post-id="1">
-    <a class="edit-blog-link" th:href="@{/blog/updateForm/{id}(id=${blog.id})}">블로그명 수정</a>
     <h1>글 목록</h1>
-    <a class="create-post-link" th:href="@{/post/addForm/{id}(id=${blog.id})}">글 작성</a>
+    <a class="create-post-link" th:href="@{/post/addForm}">글 작성</a>
     <div class="cards-container" th:if="${!posts.empty}">
         <div th:each="post: ${posts}">
             <div class="card">
@@ -36,7 +35,7 @@
     <div class="pagination" th:if="${posts.totalPages > 1}">
         <ul>
             <li th:each="i : ${#numbers.sequence(1, posts.totalPages)}">
-                <a th:href="@{/post/{id}(id=${blog.id}, page=${i})}" th:text="${i}"></a>
+                <a th:href="@{/post/{id}(id=${user.id}, page=${i})}" th:text="${i}"></a>
             </li>
         </ul>
     </div>

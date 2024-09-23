@@ -1,36 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Personal Blog</title>
     <link rel="stylesheet" href="/css/header.css">
 </head>
 <body>
-<div th:replace="~{header/header :: header(username=${username})}"></div>
-
-<h1>Blog List</h1>
-<table th:if="${!blogs.empty}">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="blog: ${blogs}">
-        <td th:text="${blog.id}"></td>
-        <td>
-            <a th:href="@{/post/{id}(id=${blog.id})}" th:text="${blog.title}">상세 페이지 이동</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div th:if="${blogs.totalPages > 1}">
-    <ul>
-        <li th:each="i : ${#numbers.sequence(1, blogs.totalPages)}">
-            <a th:href="@{/blog/${user.getId()}(page=${i})}" th:text="${i}"></a>
-        </li>
-    </ul>
+<div th:replace="~{header/header :: header}"></div>
+<div class="profile-pic">
+    <div class="profile-picture">
+        <img th:if="${user !=null and user.profileImage != null}" th:src="@{|${user.profileImage}|}" alt="Loading image" class="profile-picture">
+        <img th:if="${user !=null && user.profileImage == null}" src="/image/profile.jpg" alt="No image" class="profile-picture">
+    </div>
+</div>
+<div>
+    <a th:href="@{/post/{id}(id=${user.id})}">작성한 글</a>
+    <a th:href="@{/post/draft/{id}(id=${user.id})}">임시 글</a>
 </div>
 </body>
 </html>

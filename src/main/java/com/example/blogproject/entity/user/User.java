@@ -1,11 +1,11 @@
 package com.example.blogproject.entity.user;
 
-import com.example.blogproject.entity.blog.Blog;
+import com.example.blogproject.entity.post.Post;
+import com.example.blogproject.entity.post.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +28,8 @@ public class User {
     private String profileImage;
     @Column(name = "introduction")
     private String introduction;
+    @Column(name = "blog_name")
+    private String blogName;
     @Column(name = "registration_date", nullable = false, updatable = false)
     private LocalDateTime registrationDate = LocalDateTime.now();
 
@@ -40,5 +42,8 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Blog> blogs;
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Tag> tags;  // 사용자가 생성한 태그들
 }

@@ -3,7 +3,6 @@ package com.example.blogproject.controller.post;
 import com.example.blogproject.dto.DisplayedImageDTO;
 
 import com.example.blogproject.entity.post.Post;
-import com.example.blogproject.repository.blog.BlogRepository;
 import com.example.blogproject.repository.post.PostRepository;
 import com.example.blogproject.service.image.TemporaryImageService;
 import com.example.blogproject.service.post.PostService;
@@ -23,7 +22,6 @@ import java.util.Optional;
 @RequestMapping("/api/posts")
 public class PostRestController {
     private final PostRepository postRepository;
-    private final BlogRepository blogRepository;
     private final TemporaryImageService tempImageService;
     private final PostService postService;
 
@@ -60,7 +58,7 @@ public class PostRestController {
             post.setLikes(updatedPost.getLikes());
             post.setViews(updatedPost.getViews());
             post.setImage(updatedPost.getImage());
-            post.setBlog(updatedPost.getBlog());
+            post.setUser(updatedPost.getUser());
             postRepository.save(post);
             return ResponseEntity.ok(post);
         }).orElseGet(() -> ResponseEntity.notFound().build());
@@ -73,6 +71,4 @@ public class PostRestController {
             return ResponseEntity.noContent().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
 }

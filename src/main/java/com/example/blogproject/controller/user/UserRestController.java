@@ -5,21 +5,17 @@ import com.example.blogproject.entity.user.RefreshToken;
 import com.example.blogproject.entity.user.Role;
 import com.example.blogproject.entity.user.User;
 import com.example.blogproject.jwt.util.JwtTokenizer;
-import com.example.blogproject.repository.user.UserRepository;
 import com.example.blogproject.security.dto.UserLoginDto;
 import com.example.blogproject.service.user.RefreshTokenService;
 import com.example.blogproject.service.user.UserService;
 import io.jsonwebtoken.Claims;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +26,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Slf4j
 public class UserRestController {
     private final JwtTokenizer jwtTokenizer;
     private final UserService userService;
@@ -118,14 +113,14 @@ public class UserRestController {
 
         User user = userService.getUser(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾지 못했습니다."));
 
-        List roles = (List)claims.get("roles");
+        List<String> roles = (List)claims.get("roles");
 
         String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), user.getProfileImage(), user.getIntroduction(), roles);
 
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(Math.toIntExact(jwtTokenizer.ACCESS_TOKEN_EXPIRE_COUNT / 1000));
+        accessTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.ACCESS_TOKEN_EXPIRE_COUNT / 1000));
 
         response.addCookie(accessTokenCookie);
         UserLoginResponse responseDto = UserLoginResponse.builder()

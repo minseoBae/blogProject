@@ -1,6 +1,6 @@
 package com.example.blogproject.entity.post;
 
-import com.example.blogproject.entity.blog.Blog;
+import com.example.blogproject.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,7 +29,7 @@ public class Post {
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
-    @Column(name = "image")
+    @Column(name = "image_url")
     private String imageUrl;
     @Column(name = "likes")
     @ColumnDefault("0")
@@ -43,6 +43,14 @@ public class Post {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "blog_id")
-    private Blog blog;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;  // 게시글에 할당된 태그들
 }
