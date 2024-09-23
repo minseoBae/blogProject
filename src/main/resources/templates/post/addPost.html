@@ -48,7 +48,7 @@
             // 이미지 드래그 앤 드롭 처리 추가
             $("div.note-editable").on('drop', function(e) {
                 for (i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
-                    uploadSummernoteImageFile(e.originalEvent.dataTransfer.files[i], $("#summernote")[0]);
+                    uploadImage(e.originalEvent.dataTransfer.files[i], $("#summernote")[0]);
                 }
                 e.preventDefault();
             });
@@ -79,7 +79,7 @@
 <div class="container">
     <h2>Create a Post</h2>
     <form action="/post/addPost" method="post" th:object="${post}" enctype="multipart/form-data">
-        <input type="hidden" id="blogId" name="blogId" th:value="${blogId}">
+        <input type="hidden" id="userId" name="userId" th:value="${user.id}">
 
         <label for="title">제목 : </label>
         <input type="text" id="title" name="title" th:field="*{title}" required>
